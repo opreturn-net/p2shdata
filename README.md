@@ -1,5 +1,6 @@
-# p2shdata
-**p2shdata protocol: A protocol to store data contained in pay-to-script-hash (p2sh) scriptsigs**
+# p2shdata protocol
+
+## A protocol to store data contained in pay-to-script-hash (p2sh) scriptsigs
 
 Coins in a p2sh address are spent by revealing a bitcoin scriptsig that evaluates to true. The script usually includes a redeemscript with one or more public keys, along with a signature for each pubkey in the scriptsig. However other scripts, including those that just reveal arbitrary data and then drop it, can be included in the redeemscript. This protocol uses this script functionality to push data and then drop it from the operations stack in the spending transaction. The final operation pushes the value 1 (true, op_1) so that the script evaluates true and coins at the p2sh address are spendable while saving data to blockchain.
  
