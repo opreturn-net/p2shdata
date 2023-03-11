@@ -1,6 +1,6 @@
 # p2shdata protocol
 
-## A protocol to store data contained in pay-to-script-hash (p2sh) scriptsigs
+**p2shdata protocol: A protocol to store data contained in pay-to-script-hash (p2sh) scriptsigs**
 
 Coins in a p2sh address are spent by revealing a bitcoin scriptsig that evaluates to true. The script usually includes a redeemscript with one or more public keys, along with a signature for each pubkey in the scriptsig. However other scripts, including those that just reveal arbitrary data and then drop it, can be included in the redeemscript. This protocol uses this script functionality to push data and then drop it from the operations stack in the spending transaction. The final operation pushes the value 1 (true, op_1) so that the script evaluates true and coins at the p2sh address are spendable while saving data to blockchain.
  
@@ -11,13 +11,8 @@ The redeemscript is base58(ripemd160(sha256))) to create the p2sh address. Coins
 
 #### The OP_RETURN output contains metadata to reconstruct and verify the file
 [ site ]	[ protocol ]	[ version ]	[ filename ]	[ filetype ]	[ filesize ]	[ assembly_script ]	[ datahash160 ]
-
-(12 byte)	(10 byte)	(2 byte)	(16 byte)	(4 byte)	(4 byte)	(12 byte)	(20 byte)
-
-opreturn.net	/p2shdata	hex decimal	hex	hex	hex	hex	ripemd160(sha256(data))
-
-0 pad right	0 pad right	0 pad left	0 pad left	0 pad left	0 pad left	0 pad right	no padding
-
+* (12 byte 0pad)	(10 byte 0pad)	(0pad 2 byte)	(0pad 16 byte)	(0pad 4 byte)	(0pad 4 byte)	(12 byte 0pad)	(20 byte)
+* (opreturn.net)	(/p2shdata)	(hex) (decimal)	(hex)	(hex)	(hex)	(hex)	(ripemd160(sha256(data)) )
 
 **TYPICAL ORDER OF OPERATIONS TO SAVE DATA WITH P2SHDATA**
 1. Obtain data file, encode to hex, and calculate metadata needed for the op_return output (filename, type, bytesize, hash160 digest)
