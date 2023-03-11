@@ -11,8 +11,11 @@ The redeemscript is base58(ripemd160(sha256))) to create the p2sh address. Coins
 
 #### The OP_RETURN output contains metadata to reconstruct and verify the file
 [ site ]	[ protocol ]	[ version ]	[ filename ]	[ filetype ]	[ filesize ]	[ assembly_script ]	[ datahash160 ]
+
 (12 byte)	(10 byte)	(2 byte)	(16 byte)	(4 byte)	(4 byte)	(12 byte)	(20 byte)
+
 opreturn.net	/p2shdata	hex decimal	hex	hex	hex	hex	ripemd160(sha256(data))
+
 0 pad right	0 pad right	0 pad left	0 pad left	0 pad left	0 pad left	0 pad right	no padding
 
 
