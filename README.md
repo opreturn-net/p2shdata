@@ -57,6 +57,7 @@ Drop trailing 11 bytes of salt and OP codes, then concatenate all the chunks in 
 Scriptsigs provide a much larger datasize than op_return or unspendable outputs to store data. Since the protocol doesn't use signatures, the vast majority of the transaction size is due to the data within the scriptsig. This means transaction fees per datasize are lower when compared to other methods. Unspendable outputs, which some methods use to store data by sending dust to an unspendable address, increase the utxo database, which can never be pruned. Utxo database bloat is a cost incurred by all nodes since they must keep this in the fastest accessible location, such as system RAM, whereas p2shdata transactions are fully prunable. And even if nodes choose not to prune, the data is stored on disk as old block files rather than utxo data. Since p2shdata uses transaction inputs to save the data, no dust is created and coins minus transaction fees can be returned to your wallet. Data sizes are currently limited by the maximum transaction size, which is 100 kb. Since OP codes, salt, and other non-data components of a transaction (i.e. the vin(s) & vout(s)) take up approximately 12% of that size, the actual largest data file that can be saved is around 88 kb. Future versions of the protocol may employ multiple transactions which could be stacked together for even larger data files much like the multiple scriptsigs are concatenated.
 
 **ASSEMBLY SCRIPT NOTES**
+
 The assembly script can be up to 12 bytes (bytes 48 to 60 in the 80 byte op_return output). This script gives the range (first to last) in hex of indexed outputs that contain the data, and provide any specific encoding requirements.
 
 * Assembly script example: 05dc00ffec64000000000000
@@ -73,6 +74,7 @@ The assembly script can be up to 12 bytes (bytes 48 to 60 in the 80 byte op_retu
 * If there's no ec in the assembly, the default output is to encode the data to ascii text
 
 **DATAHASH160 NOTES**
+
 The last 20 bytes in the op_return output of the p2shdata transaction contain a hash of the reconstructed data. Hash160 is the bitcoin160 hash type, which is a double hash, first with SHA256, then followed by RipeMD-160 (often called HASH160 or represented as ripemd-160(sha256(data)).) The hash digest contained in the op_return output (op_datahash160) can be compared to the hash160 value calculated at time of data re-assembly (payloadhash160) to ensure data integrity.
 
  
@@ -94,6 +96,7 @@ The last 20 bytes in the op_return output of the p2shdata transaction contain a 
  
  
 **P2SHDATA Tools**
+
 * P2SHDATA protocol at opreturn.net: https://opreturn.net/p2shdata/
 * P2SHDATA addresses encoded with this tool: https://opreturn.net/p2shdata/data_addrs.php
 * P2SHDATA OP_RETURN outputs decoded with this tool: https://opreturn.net/p2shdata/parse_p2shdata_opreturn.php
