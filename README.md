@@ -76,3 +76,26 @@ If there's no ec in the assembly, the default output is to encode the data to as
 DATAHASH160 NOTES
 
 The last 20 bytes in the op_return output of the p2shdata transaction contain a hash of the reconstructed data. Hash160 is the bitcoin160 hash type, which is a double hash, first with SHA256, then followed by RipeMD-160 (often called HASH160 or represented as ripemd-160(sha256(data)).) The hash digest contained in the op_return output (op_datahash160) can be compared to the hash160 value calculated at time of data re-assembly (payloadhash160) to ensure data integrity.
+
+ 
+Examples of Data Saved in tx scriptsigs using P2SHDATA protocol
+opreturn.net is programmed to display transaction data saved with p2shdata protocol
+Data description    	bytes	coin	txid link
+opreturn.net logo	42991	doge	82e1efc1e9cf1b063450b798328936067ac00fd9eeb950ae223362104814209e
+PGP Public Key	3130	doge	8b9c654584936e310d2919477cd7aeb9a20a236ed87045238378b81432472fa4
+PGP message	1150	doge	e26098c6c569611f2e737328d30aec5f4a98a7271d661e2c33425272519c16a0
+doge ascii art	1514	doge	52203bd170a4ce04b058af8730d6ffa20405d2ede7a847873cc4cb8dc14c151b
+doge icon	5420	doge	97f748eb2048b645da053c6e27db31d0e9f6a050413b58b8957346d448357e65
+dogeloaf.jpg	28883	doge	fe592b97651bf2b56bcb6ecd62ca7d6c942c6febf7cea98766e0b96b6e777872
+garlicoin	15041	grlc	1aee8058f206821dbaefd2ddec9dcbb5b71655c6627eaec33b5805fa61ed496a
+A Modest Proposal	39819	grlc	bafc0c4842b4cd84ebb2325c285fc537343ba2d2fbc005a1bc17aa06e66d96d4
+periodic table of elements	1430	grlc	3db2de399ddf2f97f82848b5df68d11486e497134b04d4f88344dfd117c6cb58
+garlic drawing	27078	grlc	1e882dbb3206cbc3d2699a2e01fedb9204797f43efacd8453dcaeb318f772223
+ 
+ 
+P2SHDATA Tools
+P2SHDATA addresses encoded with this tool: opreturn.net/p2shdata/data_addrs.php
+P2SHDATA OP_RETURN outputs decoded with this tool: opreturn.net/p2shdata/parse_p2shdata_opreturn.php
+ 
+An implementation of p2shdata protocol in JavaScript by MaxPuig: https://github.com/MaxPuig/p2shdata
+
