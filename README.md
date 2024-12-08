@@ -65,12 +65,14 @@ The assembly script can be up to 12 bytes (bytes 48 to 60 in the 80 byte op_retu
 * First byte of the assembly (dc) is data location, followed by 2 bytes for first (00) and last (ff) tx input with data
 * dc00ff will parse every tx input (input 0 to 255) for script data
 * A data range other than 0 to 255 can be specified if some tx inputs don't contain data
-* The next byte after data range (ec) indicates data should be encoded in a format other than ascii text
-* 64 indicates the data should be base64 encoded
-* 16 indicates the data should is base16 hex and doesn't need any decoding at all
-* 10 indicates the data should be base10 decimal encoded
-* f8 indicates the data should be UTF-8 encoded
-* If there's no ec in the assembly, the default output is to encode the data to ascii text
+* The next byte after data range (ec) indicates encoding
+* 00 ascii
+* 01 ansi
+* 10 decimal
+* 16 hexadecimal
+* 64 base64 images, video
+* f8 UTF-8 encoded
+* default to 00 ascii
 
 **DATAHASH160 NOTES**
 
