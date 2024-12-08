@@ -76,7 +76,7 @@ Scriptsigs provide a much larger datasize than op_return or unspendable outputs 
 
 **ASSEMBLY SCRIPT NOTES**
 
-The assembly script can be up to 13 bytes (bytes 48 to 60 in the 80 byte op_return output). This script gives the range (first to last) in hex of indexed outputs that contain the data, and provide any specific encoding requirements.
+The assembly script can be up to 12 bytes (bytes 48 to 60 in the 80 byte op_return output). This script gives the range (first to last) in hex of indexed outputs that contain the data, and provide any specific encoding requirements and optional data description.
 
 * Assembly script example: 0bdc0050ec64cd696d616765
 * byte 0 (0b) is the byte size of the script (dc0050ec64cd696d616765), any right padded zeros can be ignored
