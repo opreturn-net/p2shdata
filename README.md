@@ -3,6 +3,25 @@
 **p2shdata protocol: A protocol to store data contained in pay-to-script-hash (p2sh) scriptsigs**
 
 Coins in a p2sh address are spent by revealing a bitcoin scriptsig that evaluates to true. The script usually includes a redeemscript with one or more public keys, along with a signature for each pubkey in the scriptsig. However other scripts, including those that just reveal arbitrary data and then drop it, can be included in the redeemscript. This protocol uses this script functionality to push data and then drop it from the operations stack in the spending transaction. The final operation pushes the value 1 (true, op_1) so that the script evaluates true and coins at the p2sh address are spendable while saving data to blockchain.
+
+#### HOW IT WORKS
+Here's a diagram of how the protocol works:
+```mermaid
+graph LR
+A[Your GRLC] 
+A --> |Fund address|B[Address created\nfrom your password] 
+subgraph many_addresses
+C[Address]
+D[Address]
+E[Address]
+end
+B--> C
+B --> |"1st transaction\n(Encrypted data)"|D
+B --> E
+many_addresses -->|"2nd Transaction\n(Decrypted data)"| F[Destination address]
+many_addresses -->|Information about\nthe data| G[OP_RETURN]
+```
+- diagram credit to [MaxPuig](https://github.com/MaxPuig/p2shdata-gui).
  
 #### The p2shdata redeemscript has the following script structure	                             
 * *OP_PUSH(varint) [data] OP_PUSH(8 bytes) [salt] OP_2DROP OP_1*
@@ -57,22 +76,19 @@ Scriptsigs provide a much larger datasize than op_return or unspendable outputs 
 
 **ASSEMBLY SCRIPT NOTES**
 
-The assembly script can be up to 12 bytes (bytes 48 to 60 in the 80 byte op_return output). This script gives the range (first to last) in hex of indexed outputs that contain the data, and provide any specific encoding requirements.
+The assembly script can be up to 13 bytes (bytes 48 to 60 in the 80 byte op_return output). This script gives the range (first to last) in hex of indexed outputs that contain the data, and provide any specific encoding requirements.
 
-* Assembly script example: 05dc00ffec64000000000000
-* 1st byte (05) is the byte size of the script (dc00ffec64), so the right padded zeros can be ignored
-* Assembly operation example: dc00ffec64
-* First byte of the assembly (dc) is data location, followed by 2 bytes for first (00) and last (ff) tx input with data
-* dc00ff will parse every tx input (input 0 to 255) for script data
-* A data range other than 0 to 255 can be specified if some tx inputs don't contain data
-* The next byte after data range (ec) indicates encoding
-* 00 ascii
-* 01 ansi
-* 10 decimal
-* 16 hexadecimal
-* 64 base64 images, video
-* f8 UTF-8 encoded
-* default to 00 ascii
+* Assembly script example: 0bdc0050ec64cd696d616765
+* byte 0 (0b) is the byte size of the script (dc0050ec64cd696d616765), any right padded zeros can be ignored
+* byte 1 (dc) data contained in output vin starting at byte 2 and ending at byte 3
+* byte 2 (00) first tx output vin (hex) containing p2shdata
+* byte 3 (50) last tx output vin (hex) containing p2shdata, '50' is 80 in decimal
+* byte 4 (ec) encoding type contained in byte 5
+* byte 5 (64) encode to Base64. Other encodings: ['00'=>'ascii', '01'=>'ansi', '10'=>'base10', '16'=>'hex', '64'=>'base64', 'f8'=>'UTF-8']
+* byte 6 (cd) points to bytes 7-11 for provided content description
+* bytes 7-11 (696d616765) content description, '696d616765' is 'image' in hex
+  
+* default encoding to ec00 to ascii
 
 **DATAHASH160 NOTES**
 
@@ -83,6 +99,11 @@ The last 20 bytes in the op_return output of the p2shdata transaction contain a 
 
 *https://opreturn.net is programmed to display transaction data saved with p2shdata protocol*
 #### Data description / bytes	/ coin	/ txid link
+
+* garlicoin.png	/ 15041	/ grlc /	https://opreturn.net/1aee8058f206821dbaefd2ddec9dcbb5b71655c6627eaec33b5805fa61ed496a
+* Anthony Bourdain png	/ 40393	/ grlc /	https://opreturn.net/9bb443cf972e3e49cad8e3e5790594763598586fdcc8f178721362f2fad9dbce
+* dude-biglebowski.ans	/ 14931 /	grlc /	https://opreturn.net/0346419ccb50e3fbc76291f02a6f06732e44000876fdfc7e0c4412c42c8c4f14
+* garlic drawing	/ 27078	/ grlc	/ https://opreturn.net/1e882dbb3206cbc3d2699a2e01fedb9204797f43efacd8453dcaeb318f772223
 * opreturn.net logo /	42991 /	doge /	https://opreturn.net/82e1efc1e9cf1b063450b798328936067ac00fd9eeb950ae223362104814209e
 * doge_vector.png / 71336 / doge / https://opreturn.net/82305ddf2be86424551cc0ca500204a23d0db63385d6b36a27a7c4f8bc51c6a6
 * PGP Public Key	/ 3130 /	doge /	https://opreturn.net/8b9c654584936e310d2919477cd7aeb9a20a236ed87045238378b81432472fa4
@@ -90,10 +111,6 @@ The last 20 bytes in the op_return output of the p2shdata transaction contain a 
 * doge ascii art /	1514	/ doge	/ https://opreturn.net/52203bd170a4ce04b058af8730d6ffa20405d2ede7a847873cc4cb8dc14c151b
 * doge icon /	5420	/ doge	/ https://opreturn.net/97f748eb2048b645da053c6e27db31d0e9f6a050413b58b8957346d448357e65
 * dogeloaf.jpg	/ 28883	/ doge	/ https://opreturn.net/fe592b97651bf2b56bcb6ecd62ca7d6c942c6febf7cea98766e0b96b6e777872
-* garlicoin	/ 15041	/ grlc /	https://opreturn.net/1aee8058f206821dbaefd2ddec9dcbb5b71655c6627eaec33b5805fa61ed496a
-* A Modest Proposal	/ 39819	/ grlc /	https://opreturn.net/bafc0c4842b4cd84ebb2325c285fc537343ba2d2fbc005a1bc17aa06e66d96d4
-* periodic table of elements	/ 1430 /	grlc /	https://opreturn.net/3db2de399ddf2f97f82848b5df68d11486e497134b04d4f88344dfd117c6cb58
-* garlic drawing	/ 27078	/ grlc	/ https://opreturn.net/1e882dbb3206cbc3d2699a2e01fedb9204797f43efacd8453dcaeb318f772223
  
  
 **P2SHDATA Tools**
